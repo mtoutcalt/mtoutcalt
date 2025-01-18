@@ -48,8 +48,8 @@ _Epping, New Hampshire | 2013 – 2015_
 **IT Analyst**  
 *Liberty Mutual Insurance*  
 _Epping, New Hampshire | 2012 – 2013_  
-- Supported Central IT teams by modernizing legacy Java applications  
-
+- Developed applications for central IT related to Identity & Accesss Management (IAM) 
+- Modernized legacy Java applications, used frameworks like Spring, Struts 1/2, Java EE
 ---
 
 ## Education  
