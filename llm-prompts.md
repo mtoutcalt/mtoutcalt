@@ -18,3 +18,13 @@ Remember the following:
 ```
 
 ----------------------------------------------------------------------------------------------------------------------------------------
+
+
+Reasoning models /o1
+https://www.latent.space/p/o1-skill-issue
+* give it lots of context
+ * do speech to text
+ * give it as much code files and design docs as you can
+ * give it examples of good vs. bad
+* ask it for multiple solutions
+* Focus on WHAT you want and not the HOW
