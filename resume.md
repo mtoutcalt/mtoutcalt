@@ -13,11 +13,11 @@ I have been a professional software engineer since 2012. Working at a big compan
 ## Skills  
 - **Programming Languages**: Java, JavaScript, Python, Bash  
 - **Databases**: SQL, relational DBs, NoSQL, data-driven design  
-- **Frontend Development**: Responsive and accessible UI with CSS, TypeScript, React, HTML  
+- **Frontend Development**: Responsive and accessible UI with CSS, HTML, TypeScript, React, Astro
 - **Cloud Development**: AWS, serverless design, PaaS (Cloud Foundry)  
 - **CI/CD Tools**: Bamboo, GitHub Actions  
 - **Containers**: Docker, Kubernetes (K8s)  
-- **Leadership**: Technical lead on agile teams, product design methods  
+- **Leadership**: Technical lead on agile teams, Product design, Project management, mentorship, hiring experience
 
 ---
 
