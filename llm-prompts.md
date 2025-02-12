@@ -28,3 +28,37 @@ https://www.latent.space/p/o1-skill-issue
  * give it examples of good vs. bad
 * ask it for multiple solutions
 * Focus on WHAT you want and not the HOW
+
+
+
+
+
+1. Start with a simple question
+2. Use the regular models to create a step by step research plan prompt
+
+```
+1.	Identifies Key Objectives
+
+•	State what questions each plan aims to answer.
+
+•	Clarify what information or data is needed to evaluate each option.
+
+2.	Describes Research Methods
+
+•	Outline how you will gather, analyze, and validate the required information.
+
+•	Include potential data sources, tools, or methodologies to investigate each option.
+
+3.	Provides Evaluation Criteria
+
+•	Detail how you will measure success or viability for each option.
+
+•	Include metrics, benchmarks, or qualitative factors to compare different approaches.
+
+4.	Specifies Expected Outcomes
+
+•	Explain what results or findings you expect from conducting this research.
+
+•	Highlight any actionable steps or decisions that may follow.
+```
+3. Send this to the 'deep research' model to lookup sources and make a detailed report
