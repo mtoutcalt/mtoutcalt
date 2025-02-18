@@ -62,3 +62,11 @@ https://www.latent.space/p/o1-skill-issue
 •	Highlight any actionable steps or decisions that may follow.
 ```
 3. Send this to the 'deep research' model to lookup sources and make a detailed report
+
+
+-------------------------------------------------------------------------------------------------------------------------
+When the LLM is stuck in a coding loop of errors:
+```
+Reflect on 5-7 different possible sources of the problem, distill those down to 1-2 most likely sources,
+ and then add logs to validate your assumptions before we move onto implementing the actual code fix
+```
