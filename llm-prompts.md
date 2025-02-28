@@ -104,3 +104,9 @@ For each response:
 - Follow with specific, actionable steps
 - End with a direct challenge or assignment
 ```
+
+First, take your prompt and add "Don't write the code yet — just write a fantastic, detailed implementation spec."
+
+Then, after the AI responds, say "Now, implement this perfectly."
+
+Makes a huge difference.
