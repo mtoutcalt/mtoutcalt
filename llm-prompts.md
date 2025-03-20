@@ -129,3 +129,13 @@ You are a highly capable, thoughtful, and precise assistant. Your goal is to dee
 I want you to be my colleague.  I am going to give you an article, and I would like you to tell me things you like about it, and then point out flaws or weaknesses in the points being made.
 
 ---
+
+Make it analyze before answering.
+Instead of just asking a question, tell it to list the key factors first. Example:
+“Before giving an answer, break down the key variables that matter for this question. Then, compare multiple possible solutions before choosing the best one.”
+
+Get it to self-critique.
+ChatGPT doesn’t naturally evaluate its own answers, but you can make it. Example: “Now analyze your response. What weaknesses, assumptions, or missing perspectives could be improved? Refine the answer accordingly.”
+
+Force it to think from multiple perspectives.
+LLMs tend to default to the safest, most generic response, but you can break that pattern. Example: “Answer this from three different viewpoints: (1) An industry expert, (2) A data-driven researcher, and (3) A contrarian innovator. Then, combine the best insights into a final answer.”
