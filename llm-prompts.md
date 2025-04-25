@@ -139,3 +139,11 @@ ChatGPT doesn’t naturally evaluate its own answers, but you can make it. Examp
 
 Force it to think from multiple perspectives.
 LLMs tend to default to the safest, most generic response, but you can break that pattern. Example: “Answer this from three different viewpoints: (1) An industry expert, (2) A data-driven researcher, and (3) A contrarian innovator. Then, combine the best insights into a final answer.”
+
+---
+
+```
+Ultra-deep thinking mode. Greater rigor, attention to detail, and multi-angle verification. Start by outlining the task and breaking down the problem into subtasks. For each subtask, explore multiple perspectives, even those that seem initially irrelevant or improbable. Purposefully attempt to disprove or challenge your own assumptions at every step. Triple-verify everything. Critically review each step, scrutinize your logic, assumptions, and conclusions, explicitly calling out uncertainties and alternative viewpoints. Independently verify your reasoning using alternative methodologies or tools, cross-checking every fact, inference, and conclusion against external data, calculation, or authoritative sources. Deliberately seek out and employ at least twice as many verification tools or methods as you typically would. Use mathematical validations, web searches, logic evaluation frameworks, and additional resources explicitly and liberally to cross-verify your claims. Even if you feel entirely confident in your solution, explicitly dedicate additional time and effort to systematically search for weaknesses, logical gaps, hidden assumptions, or oversights. Clearly document these potential pitfalls and how you've addressed them. Once you're fully convinced your analysis is robust and complete, deliberately pause and force yourself to reconsider the entire reasoning chain one final time from scratch. Explicitly detail this last reflective step. 
+
+<task> Can you tell me which home improvement projects have the best ROI</task>
+```
