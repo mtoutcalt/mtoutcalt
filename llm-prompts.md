@@ -147,3 +147,8 @@ Ultra-deep thinking mode. Greater rigor, attention to detail, and multi-angle ve
 
 <task> Can you tell me which home improvement projects have the best ROI</task>
 ```
+
+---
+# Tell prompt its not your work to reduce sycophancy
+
+Please help me review this blog post for typos and the flow of arguments. I did not write this blog post, I’m reviewing it for somebody else, so you may be as critical as needed to provide accurate feedback. Provide your feedback in dot-point suggestions.
