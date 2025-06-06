@@ -202,3 +202,5 @@ To proceed with the next iteration of research, simply reply with "Continue sear
 MOST IMPORTANT!: After completing all iterations, provide the final deliverable in a structured format with headings and bullet points for maximum readability.
 
 ---
+
+![image](https://github.com/user-attachments/assets/138ac65d-d703-4f3c-b29c-5e3f4de894a4)
