@@ -5,8 +5,7 @@
 
 Here are some ideas to get you started:
 -->
-- 🔭 I’m currently working on a personal site 
-- 🌱 I’m currently learning astro
+- 🔭 I’m currently working on a blog, a password manager, and learning Svelte/Rust/basic machine learning
 - 📫 How to reach me: https://mastodon.social/@markoutcalt
 - 😄 Pronouns: he/him
 
