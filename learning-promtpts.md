@@ -3,3 +3,7 @@
 ---
 
 Teach me <topic> using the Socratic Method. My level: <beginner/intermediate/advanced>. Constraints: Ask one question at a time; wait for my reply; use first-principles reasoning; prefer derivations over facts; give hints before answers; use simple numbers/examples; summarize every 5 questions; finish with a quiz and applications.
+
+Tell it to track misconceptions it notices and revisit them. • Ask for multiple representations (diagram, equation, plain-language summary). • Periodically request a Feynman check: “Explain this back to me like I’m 12.” • When precision matters, ask for citations or to “show the derivation, then give a short answer.”
+
+---
