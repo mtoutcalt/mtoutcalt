@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Details/Summary Demo (Chrome 131+)</title>
+    <style>
+        @supports (interpolate-size: allow-keywords) {
+            :root {
+                interpolate-size: allow-keywords;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .info {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.3em;
+        }
+
+        .label {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        /* Example 1: Animated Height with ::details-content */
+        .animated-accordion details {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: white;
+            overflow: hidden;
+        }
+        
+        .animated-accordion summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: #667eea;
+            padding: 16px 20px;
+            user-select: none;
+            list-style: none;
+            background: #f8f9fa;
+            transition: background 0.2s;
+        }
+
+        .animated-accordion summary:hover {
+            background: #e9ecef;
+        }
+        
+        .animated-accordion summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 12px;
+            transition: transform 0.3s ease;
+        }
+        
+        .animated-accordion details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .animated-accordion details[open] {
+            border-color: #667eea;
+        }
+
+        /* Using ::details-content pseudo-element */
+        @supports selector(::details-content) {
+            .animated-accordion ::details-content {
+                transition: height 0.4s ease, content-visibility 0.4s ease allow-discrete;
+                height: 0;
+                overflow: clip;
+            }
+
+            .animated-accordion [open]::details-content {
+                height: auto;
+            }
+        }
+
+        .animated-accordion .content-wrapper {
+            padding: 0 20px 16px 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Example 2: Flex Layout on details */
+        .flex-accordion {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .flex-accordion details {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+            min-width: 200px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .flex-accordion details[open] {
+            border-color: #764ba2;
+            box-shadow: 0 4px 12px rgba(118, 75, 162, 0.2);
+        }
+
+        .flex-accordion summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: #764ba2;
+            user-select: none;
+            list-style: none;
+            min-width: 120px;
+        }
+
+        .flex-accordion summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 8px;
+            transition: transform 0.3s;
+        }
+
+        .flex-accordion details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        @supports selector(::details-content) {
+            .flex-accordion ::details-content {
+                padding-left: 16px;
+                color: #666;
+                transition: width 0.4s ease, content-visibility 0.4s ease allow-discrete;
+                width: 0;
+                overflow: clip;
+            }
+
+            .flex-accordion [open]::details-content {
+                width: auto;
+            }
+        }
+
+        /* Example 3: Material UI Style with Border Animation */
+        .material-accordion details {
+            border-bottom: 1px solid #e0e0e0;
+            background: white;
+        }
+
+        .material-accordion details:first-child {
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .material-accordion summary {
+            cursor: pointer;
+            font-weight: 500;
+            color: #333;
+            padding: 20px 16px;
+            user-select: none;
+            list-style: none;
+            transition: background 0.2s;
+        }
+
+        .material-accordion summary:hover {
+            background: #f5f5f5;
+        }
+
+        .material-accordion summary::before {
+            content: '▼';
+            display: inline-block;
+            margin-right: 12px;
+            transition: transform 0.3s ease;
+            color: #666;
+        }
+
+        .material-accordion details[open] summary::before {
+            transform: rotate(-180deg);
+        }
+
+        @supports selector(::details-content) {
+            .material-accordion ::details-content {
+                border-left: 3px solid transparent;
+                transition: 
+                    height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    content-visibility 0.3s ease allow-discrete,
+                    border-color 0.3s ease;
+                height: 0;
+                overflow: clip;
+            }
+
+            .material-accordion [open]::details-content {
+                height: auto;
+                border-left-color: #667eea;
+            }
+        }
+
+        .material-accordion .content-wrapper {
+            padding: 0 16px 20px 28px;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        /* Example 4: Grid Layout */
+        .grid-accordion {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .grid-accordion details {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            background: white;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .grid-accordion details:hover {
+            transform: translateY(-2px);
+        }
+
+        .grid-accordion details[open] {
+            border-color: #667eea;
+            background: linear-gradient(to bottom, #f8f9fa 0%, white 100%);
+        }
+
+        .grid-accordion summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: #667eea;
+            user-select: none;
+            list-style: none;
+            padding-bottom: 12px;
+        }
+
+        .grid-accordion summary::marker {
+            content: '';
+        }
+
+        .grid-accordion summary::before {
+            content: '+';
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 1.3em;
+            transition: transform 0.3s;
+        }
+
+        .grid-accordion details[open] summary::before {
+            content: '−';
+        }
+
+        @supports selector(::details-content) {
+            .grid-accordion ::details-content {
+                transition: height 0.35s ease, content-visibility 0.35s ease allow-discrete;
+                height: 0;
+                overflow: clip;
+            }
+
+            .grid-accordion [open]::details-content {
+                height: auto;
+            }
+        }
+
+        .grid-accordion .content-wrapper {
+            padding-top: 8px;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #d63384;
+        }
+
+        .note {
+            background: #fff9e6;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Advanced &lt;details&gt; Styling Demo</h1>
+    
+    <div class="info">
+        <strong>Chrome 131+ Features:</strong> This demo showcases the new <code>::details-content</code> pseudo-element, 
+        animated height transitions, and flexible display properties on <code>&lt;details&gt;</code> elements.
+    </div>
+
+    <div class="section">
+        <h2>Animated Height <span class="label">::details-content</span></h2>
+        <p>Smooth height animation using the <code>::details-content</code> pseudo-element:</p>
+        
+        <div class="animated-accordion">
+            <details name="faq1">
+                <summary>How does the animation work?</summary>
+                <div class="content-wrapper">
+                    The <code>::details-content</code> pseudo-element animates from <code>height: 0</code> to 
+                    <code>height: auto</code> using the new <code>interpolate-size</code> CSS property. 
+                    The <code>content-visibility</code> property is also transitioned with the 
+                    <code>allow-discrete</code> keyword.
+                </div>
+            </details>
+
+            <details name="faq1">
+                <summary>What browsers support this?</summary>
+                <div class="content-wrapper">
+                    Chrome 131+, Edge 131+, Firefox 143+, and Safari 18.4+ support the <code>::details-content</code> 
+                    pseudo-element. In browsers without support, the accordion still works but without the smooth animations.
+                </div>
+            </details>
+
+            <details name="faq1">
+                <summary>Can I animate other properties?</summary>
+                <div class="content-wrapper">
+                    Yes! You can animate width, opacity, transforms, borders, and more. The key is to also 
+                    transition <code>content-visibility</code> with <code>allow-discrete</code> to handle 
+                    the show/hide behavior properly.
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Flex Layout <span class="label">display: flex</span></h2>
+        <p>Using <code>display: flex</code> with <code>flex-direction: row</code> on details:</p>
+        
+        <div class="flex-accordion">
+            <details name="flex-group">
+                <summary>React</summary>
+                <div>A JavaScript library for building user interfaces with component-based architecture.</div>
+            </details>
+
+            <details name="flex-group">
+                <summary>Vue</summary>
+                <div>Progressive framework for building UIs with an approachable and flexible design.</div>
+            </details>
+
+            <details name="flex-group">
+                <summary>Svelte</summary>
+                <div>Compiler-based framework that shifts work to compile time for faster runtime performance.</div>
+            </details>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Material UI Style <span class="label">Animated Border</span></h2>
+        <p>Material Design inspired accordion with animated border:</p>
+        
+        <div class="material-accordion">
+            <details name="material">
+                <summary>Design System Benefits</summary>
+                <div class="content-wrapper">
+                    A design system provides consistency across products, speeds up development time, 
+                    improves accessibility, and makes it easier for teams to collaborate effectively.
+                </div>
+            </details>
+
+            <details name="material">
+                <summary>Component Libraries</summary>
+                <div class="content-wrapper">
+                    Reusable component libraries help maintain consistency, reduce code duplication, 
+                    and enable faster prototyping and development of new features.
+                </div>
+            </details>
+
+            <details name="material">
+                <summary>Accessibility First</summary>
+                <div class="content-wrapper">
+                    The native <code>&lt;details&gt;</code> element includes built-in keyboard navigation, 
+                    screen reader support, and find-in-page functionality without any JavaScript.
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Grid Layout <span class="label">display: grid</span></h2>
+        <p>Card-style accordion using <code>display: grid</code>:</p>
+        
+        <div class="grid-accordion">
+            <details>
+                <summary>HTML</summary>
+                <div class="content-wrapper">
+                    Semantic markup language for structuring web content and providing meaning to elements.
+                </div>
+            </details>
+
+            <details>
+                <summary>CSS</summary>
+                <div class="content-wrapper">
+                    Style sheet language for describing the presentation and visual design of HTML documents.
+                </div>
+            </details>
+
+            <details>
+                <summary>JavaScript</summary>
+                <div class="content-wrapper">
+                    Programming language for adding interactivity and dynamic behavior to web pages.
+                </div>
+            </details>
+
+            <details>
+                <summary>APIs</summary>
+                <div class="content-wrapper">
+                    Browser and web APIs provide interfaces for accessing device features and services.
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <div class="note">
+        <strong>💡 Browser Compatibility:</strong> These demos use feature detection with <code>@supports selector(::details-content)</code>. 
+        In browsers without support, the accordions still work perfectly—you just won't see the smooth animations.
+    </div>
+</body>
+</html>
