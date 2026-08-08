@@ -5,7 +5,7 @@
 
 Here are some ideas to get you started:
 -->
-- 🔭 I’m currently working on a blog, a password manager, and learning Svelte/Rust/basic machine learning
+- 🔭 I’m currently working on a blog, a password manager, a RTS game, and learning Svelte/Rust/basic machine learning
 - 📫 How to reach me: https://mastodon.social/@markoutcalt
 - 😄 Pronouns: he/him
 
