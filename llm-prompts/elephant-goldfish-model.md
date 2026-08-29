@@ -242,44 +242,73 @@ Pass the Design Doc in parallel to specialized LLM auditor prompts in isolated G
   List all unhandled edge cases and potential logic gaps.
   ```
 
-##### 3. Structured JSON Output Schema
+##### 3. Structured JSON Output Schema & Score Calculation
+
 Enforce machine-readable JSON responses from auditors to enable automated gating:
 
-```text
+```json
 {
-  // 1. THE NUMERICAL SCORE
-  // An overall rating from 0 to 100 on how complete and clear the doc is.
+  // 1. THE NUMERICAL SCORE (0-100)
   "readiness_score": 75,
 
-  // 2. THE HARD GATE DECISION
-  // A quick enum status ("PASS", "NEEDS_REVISION", "FAIL") so scripts 
-  // can do simple conditional checks: `if (status !== 'PASS') exit(1);`
+  // 2. HARD GATE DECISION ("PASS" | "NEEDS_REVISION" | "FAIL")
   "pass_fail_recommendation": "NEEDS_REVISION",
 
-  // 3. ACTIONABLE BUG / AMBIGUITY LIST
-  // A list of exact places where the doc is vague, broken down into 
-  // key-value details so they can be fed directly back to the Elephant AI to fix.
+  // 3. ACTIONABLE BUG & AMBIGUITY LIST
   "ambiguities": [
     {
       "section": "Technical Plan",
-      "issue": "JWT expiration behavior is unspecified for offline mobile clients",
-      "suggested_fix": "Define refresh token grace period in Section 4"
+      "issue": "JWT expiration behavior is unspecified",
+      "suggested_fix": "Define refresh token grace period"
     }
   ],
 
-  // 4. HALLUCINATED FILE CHECK
-  // File paths mentioned in the design doc that do not exist in the repo.
+  // 4. HALLUCINATED / INVALID FILE CHECK
   "invalid_file_references": [
     "src/auth/old_session_manager.ts"
   ],
 
   // 5. MISSING EDGE CASES
-  // Scenarios the design doc forgot to consider.
   "unhandled_edge_cases": [
     "Concurrent write requests during schema migration"
   ]
 }
 ```
+
+###### How the Readiness Score is Generated
+
+The `readiness_score` is calculated using one of two methods:
+
+* **Method 1: Direct LLM Rubric Scoring (AI Deduction)**  
+  Provide a strict point-deduction rubric in the Goldfish auditor prompt:
+  ```text
+  Evaluate the Design Doc on a 0-100 scale starting at 100.
+  Apply these strict deductions:
+  - Deduct 25 pts: Invalid/non-existent file reference.
+  - Deduct 20 pts: Critical security/OWASP risk.
+  - Deduct 15 pts: Missing failure recovery / rollback plan.
+  - Deduct 10 pts: Undefined API signature or vague step.
+  - Deduct 5 pts: Unhandled edge case / missing boundary test.
+  Return the final calculated score in "readiness_score".
+  ```
+
+* **Method 2: Script-Calculated Scoring (Deterministic Pipeline - Recommended)**  
+  The CI/CD pipeline script aggregates findings from static checkers and auditor LLMs, calculating the score mathematically:
+  ```python
+  score = 100
+  # 1. Static check penalties
+  score -= len(static_results["invalid_files"]) * 25
+
+  # 2. Security penalties
+  for issue in security_json["ambiguities"]:
+      score -= 20 if issue["severity"] == "CRITICAL" else 10
+
+  # 3. SRE & QA penalties
+  score -= len(sre_json["missing_recoveries"]) * 15
+  score -= len(qa_json["unhandled_edge_cases"]) * 10
+
+  final_readiness_score = max(0, score)
+  ```
 
 ##### 4. Spec Fuzzing & Multi-Model Consensus (with Prompts)
 
