@@ -1,6 +1,6 @@
 # The Elephant-Goldfish Model (EGM) for AI-Assisted Software Engineering
 
-> *A Practical Guide to Design-Driven AI Development, Prompt Protocols, and Context Architecture*
+> *A Practical Guide to Design-Driven AI Development, Prompt Protocols, and Context Architecture*  
 > **Source / Reference:** Dave Rensin (2026) — https://drensin.medium.com/elephants-goldfish-and-the-new-golden-age-of-software-engineering-c33641a48874
 
 ---
@@ -48,9 +48,9 @@ The Elephant-Goldfish Model (EGM) separates deep context retention from unbiased
                      ▼
 ┌──────────────────────────────────────────┐
 │      PHASE 3: THE GOLDFISH PROTOCOL      │
-│  • Test 1: Comprehension check           │
-│  • Test 2: Skeptical technical review    │
-│  • Test 3: Implementation readiness      │
+│  • Interactive checks or automated evals │
+│  • Multi-persona auditing & linting      │
+│  • Structured readiness score & gating   │
 └────────────────────┬─────────────────────┘
                      ▼
 ┌──────────────────────────────────────────┐
@@ -128,22 +128,22 @@ Save this file directly in the repository (e.g. `docs/design/feature-name.md`). 
 
 ---
 
-### Phase 3: The Goldfish Protocol (Validation Loops)
+### Phase 3: The Goldfish Protocol (Validation Loops & Automated Eval Pipeline)
 
-Open a **brand-new, zero-context session** (the Goldfish) for each validation test. This proves the design document is self-contained and unambiguous.
+The Goldfish phase operates as an **LLM-as-a-Judge evaluation gate**. While manual chat checks work for small features, scaling EGM to production requires an automated, multi-persona auditing pipeline.
 
-#### Test 1: Comprehension Check
+#### Option A: Baseline Interactive Goldfish Checks
+Open a **brand-new, zero-context session** (the Goldfish) for each validation test to prove the design document is self-contained.
 
+##### Test 1: Comprehension Check
 ```text
 Read this document and the files it references. Tell me
 what it's trying to accomplish, and how my system
 currently works as it relates to this feature.
 ```
+*If the AI fails to explain the system, add the missing context to the doc and repeat.*
 
-If the AI fails to explain the system, add the missing context to the doc and repeat.
-
-#### Test 2: Skeptical Technical Review
-
+##### Test 2: Skeptical Technical Review
 ```text
 Assume the role of an expert technical reviewer. Read
 this design doc and all the files it references. Tell
@@ -152,11 +152,9 @@ all the edge cases I'm missing, and things I should
 have considered but did not. Every mistake and
 ambiguity you find makes you more helpful and useful.
 ```
+*Incorporate valid critiques (typically ~30% are high-value).*
 
-Incorporate the valid critiques — typically about 30% are high-value.
-
-#### Test 3: Implementation Readiness Check
-
+##### Test 3: Implementation Readiness Check
 ```text
 You are an experienced software engineer experienced
 with our codebase. Read this document and the files it
@@ -164,8 +162,158 @@ references and tell me: does it absolutely have all the
 information you would require to successfully implement
 this feature in your first pass?
 ```
+*Answer remaining questions directly in the document until the AI confirms readiness.*
 
-Answer any remaining questions directly in the document until the AI confirms readiness.
+---
+
+#### Option B: Robust Goldfish CI/CD Pipeline (Automated Evals)
+
+To eliminate human friction and single-model bias, automate the Goldfish protocol into a CI/CD pre-commit gate.
+
+```
+[ Draft Design Doc ]
+         │
+         ▼
+[ 1. Deterministic Checks ] ──► (Validate paths, lint code)
+         │
+         ▼
+[ 2. Multi-Persona Panel ]  ──► (Security, SRE, QA auditors)
+         │
+         ▼
+[ 3. Structured JSON Gate ] ──► (Score & ambiguity list)
+         │
+         ▼
+Pass (>85)? ──► YES ──► Phase 4 (Implementation)
+     │
+    NO ──► Return JSON feedback to Elephant to fix doc
+```
+
+##### 1. Deterministic Pre-Flight Checks (Static Analysis)
+Before running LLM auditors, execute fast deterministic scripts against the Design Doc:
+* **File Reference Validation:** Parse the `Affected Files & Scope` table and verify via `git` that existing file paths actually exist and new paths follow workspace conventions.
+* **Interface & Pseudocode Linting:** Extract embedded code blocks or type signatures and pass them through static type checkers (`tsc --noEmit`, `python -m py_compile`, `cargo check`) to catch hallucinated syntax.
+* **Link Checker:** Validate that all internal markdown links to other documentation resolve properly.
+
+##### 2. Multi-Persona Ensemble Auditing & Prompts
+Pass the Design Doc in parallel to specialized LLM auditor prompts in isolated Goldfish sessions:
+
+* **Security Auditor Prompt:**
+  ```text
+  Assume the role of a Senior Application Security
+  Engineer. Read the attached Design Doc and referenced
+  source files. Audit the proposal strictly for:
+  1. OWASP vulnerabilities (injection, broken auth/
+     authorization, SSRF, data exposure).
+  2. Secrets handling and credential exposure.
+  3. Input validation, sanitization, and trust boundary
+     violations.
+  List every security blind spot, missing check, or
+  vulnerability.
+  ```
+
+* **SRE / Resilience Auditor Prompt:**
+  ```text
+  Assume the role of a Principal Site Reliability
+  Engineer. Read the attached Design Doc and referenced
+  source files. Audit the proposal strictly for:
+  1. Failure recovery: What happens during DB deadlocks,
+     network partitions, or third-party API outages?
+  2. Schema & data migrations: Are zero-downtime
+     deployment and rollback steps clearly specified?
+  3. Telemetry & observability: Are metrics, structured
+     logging, and health checks explicitly detailed?
+  Flag any missing operational safeguards, unhandled
+  timeout states, or single points of failure.
+  ```
+
+* **QA / Edge-Case Hunter Prompt:**
+  ```text
+  Assume the role of a Lead QA Engineer specialized in
+  boundary testing. Read the attached Design Doc and
+  referenced source files. Audit the proposal strictly
+  for:
+  1. Boundary states: Empty arrays, null inputs, maximum
+     payload limits, rate limits.
+  2. Race conditions & concurrency: Out-of-order events,
+     duplicate webhooks, stale state reads.
+  3. Undefined behavior: Any step in the execution plan
+     where the exact error response or recovery path
+     is ambiguous.
+  List all unhandled edge cases and potential logic gaps.
+  ```
+
+##### 3. Structured JSON Output Schema
+Enforce machine-readable JSON responses from auditors to enable automated gating:
+
+```text
+{
+  // 1. THE NUMERICAL SCORE
+  // An overall rating from 0 to 100 on how complete and clear the doc is.
+  "readiness_score": 75,
+
+  // 2. THE HARD GATE DECISION
+  // A quick enum status ("PASS", "NEEDS_REVISION", "FAIL") so scripts 
+  // can do simple conditional checks: `if (status !== 'PASS') exit(1);`
+  "pass_fail_recommendation": "NEEDS_REVISION",
+
+  // 3. ACTIONABLE BUG / AMBIGUITY LIST
+  // A list of exact places where the doc is vague, broken down into 
+  // key-value details so they can be fed directly back to the Elephant AI to fix.
+  "ambiguities": [
+    {
+      "section": "Technical Plan",
+      "issue": "JWT expiration behavior is unspecified for offline mobile clients",
+      "suggested_fix": "Define refresh token grace period in Section 4"
+    }
+  ],
+
+  // 4. HALLUCINATED FILE CHECK
+  // File paths mentioned in the design doc that do not exist in the repo.
+  "invalid_file_references": [
+    "src/auth/old_session_manager.ts"
+  ],
+
+  // 5. MISSING EDGE CASES
+  // Scenarios the design doc forgot to consider.
+  "unhandled_edge_cases": [
+    "Concurrent write requests during schema migration"
+  ]
+}
+```
+
+##### 4. Spec Fuzzing & Multi-Model Consensus (with Prompts)
+
+* **Counterfactual Stress Testing (Fuzzing Protocol):**
+  * *Step 4A — Failure Scenario Generator Prompt:*
+    ```text
+    Act as a Chaos Engineer. Read this Design Doc and
+    generate 5 realistic, chaotic failure scenarios (e.g.,
+    partial network partitions mid-transaction, out-of-
+    order webhook delivery, unexpected database deadlocks,
+    third-party API rate-limiting). Output ONLY the 5
+    scenarios.
+    ```
+  * *Step 4B — Goldfish Fuzz Auditor Prompt:*
+    ```text
+    Read the attached Design Doc and evaluate it against
+    these 5 chaotic failure scenarios:
+    [INSERT SCENARIOS FROM STEP 4A]
+
+    For each scenario, cite the EXACT section and line in
+    the Design Doc that specifies how the system handles
+    it. If the spec does not explicitly handle a scenario,
+    mark it as "UNSPECIFIED: [Explain missing guardrail]".
+    ```
+
+* **Multi-Model Consensus Check Prompt:**
+  Feed the Design Doc to two distinct model families (e.g., Claude and Gemini) in isolated zero-context sessions to generate interface stubs.
+  ```text
+  Read the attached Design Doc. Do NOT implement business
+  logic. Produce ONLY the module interface definitions,
+  export signatures, and data types specified in Section 4
+  (Implementation Plan).
+  ```
+  *If the generated interface signatures from Model A and Model B differ significantly, the spec contains underlying ambiguities that must be clarified in the doc.*
 
 ---
 
@@ -237,7 +385,15 @@ Using that information this file should:
 
 **4. Repeat upward.** Continue until you reach the root. You now have a lightweight, compressed context tree — peanuts and hay — that lets any LLM understand the repository instantly without blowing the token budget.
 
-*Once design docs cover 100% of the files in a subsystem, these intermediate READMEs can be archived or deleted.*
+---
+
+### The Real-World README Lifecycle: The Perpetual Hybrid Model
+
+In mature brownfield codebases, reaching 100% Design Doc coverage across the entire repository can take months or years—or may never happen if core legacy components are stable and rarely modified.
+
+* **Perpetual Hybrid Model:** Repositories naturally operate with a hybrid documentation model: persistent leaf `README.md` files (for stable, untouched legacy modules) and EGM Design Docs (for actively modified modules).
+* **When to Keep Leaf READMEs:** Keep leaf `README.md` files indefinitely for untouched legacy subsystems. They serve as permanent, low-token static maps whenever new features need to interface with legacy code.
+* **When to Retire Leaf READMEs:** Only archive or delete leaf READMEs within a specific sub-directory when an active feature or refactor project introduces a comprehensive suite of validated EGM Design Docs that fully map and cover that specific subsystem.
 
 ---
 
